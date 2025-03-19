@@ -131,11 +131,19 @@ excluded_roles=list()
 excluded_roles_complexes=list()
 complexes=dict()
 for entry in roles_list:
-	if(entry['include'] is False):
+	#print(entry['include'])
+	if ('include' not in entry):
+		raise Exception("The following enzyme is missing include: " + entry['role'])
+	if(entry['include'] == False):
+		#print("made it")
 		excluded_roles.append(entry['role'])
 		continue
 
 	# Skip vacuolar ATP synthase, for pumping protons into vacuole
+	if ('reactions' not in entry):
+		raise Exception("The following enzyme is missing reactions: " + entry['role'])
+	if ('localization' not in entry):
+		raise Exception("The following enzyme is missing localization: " + entry['role'])
 	if("rxn08173" in entry["reactions"] and "v" in entry["localization"]):
 		print("Skipping vacuolar ATP synthase")
 		continue
